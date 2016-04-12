@@ -18,7 +18,8 @@ print(__doc__)
 
 import numpy as np
 import matplotlib.pyplot as plt
-
+from scipy.spatial.distance import pdist
+from scipy.spatial.distance import squareform
 
 from sklearn.cluster import KMeans
 from sklearn import datasets
@@ -28,22 +29,21 @@ def gen_data(number, dimension):
 	"""
 	function to generate the location of the nodes.
 	"""
-	return dimension * np.random.random_sample((number, 2)) + dimension
+	return dimension * np.random.random_sample((number, 2)) 
 
 
 
-def gen_cost(number, maximum):
+def gen_cost(data):
 	"""
 	function to generate the cost of traveling from a node to another.
+	The cost is defined as the distance between the two nodes.
 	"""
-	dummy =  maximum * np.random.random_sample((number, number)) + maximum
 
-	return np.add(dummy , dummy.transpose() )
+	return squareform(pdist(data, 'euclidean'))
 	
 
-if __name__ == '__main__':
-	
 
+def main():
 	iris = datasets.load_iris()
 
 	# X = iris.data
@@ -52,7 +52,14 @@ if __name__ == '__main__':
 	# print y
 	# print final
 	data =  gen_data(10, 15)
-	cost_matrix = gen_cost(10, 40)
+	print data
+	cost_matrix = gen_cost(data)
 
-	final = KMeans(n_clusters=3).fit_predict(data)
+	final = KMeans(n_clusters=2).fit_predict(data)
 	print final
+
+
+
+if __name__ == '__main__':
+	main()
+	
