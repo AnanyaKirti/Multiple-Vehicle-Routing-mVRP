@@ -60,13 +60,12 @@ class TravellingSalesmanProblem(Annealer):
             e += self.distance_matrix[self.state[i-1]][self.state[i]]
         return e
 
-def annealer_gen(no_data):
-    init_state = range(0,no_data)
+def annealer_gen(data):
+    init_state = range(0,len(data))
     random.shuffle(init_state)
 
     # create a distance matrix
 
-    data =  gen_data(10, 15)
     distance_matrix = gen_cost(data)
     tsp = TravellingSalesmanProblem(init_state, distance_matrix)
     state, e = tsp.anneal()
@@ -135,12 +134,15 @@ def main():
 	cluster = KMeans(n_clusters=no_of_clusters).fit_predict(data)
 	# Slice the data.
 	data_cluster = slice_data(data, cluster, no_of_clusters)
+	print (data)
+	print (cluster)
+	# print (data_cluster)
+	for i in data_cluster:
+		# print(i)
+		annealer_gen(i)
 
-
-	annealer_gen(no_data)
-
-	# print (data)
-	# print (cluster)
+	
+	
 
 
 
