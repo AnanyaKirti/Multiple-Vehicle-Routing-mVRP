@@ -39,38 +39,42 @@ import time
 
 class TravellingSalesmanProblem(Annealer):
 
-    """Test annealer with a travelling salesman problem.
-    """
-    
-    # pass extra data (the distance matrix) into the constructor
-    def __init__(self, state, distance_matrix):
-        self.distance_matrix = distance_matrix
-        super(TravellingSalesmanProblem, self).__init__(state)  # important! 
+	"""
+	Test annealer with a travelling salesman problem.
+	"""
+	
+	# pass extra data (the distance matrix) into the constructor
+	def __init__(self, state, distance_matrix):
+		self.distance_matrix = distance_matrix
+		super(TravellingSalesmanProblem, self).__init__(state)  # important! 
 
-    def move(self):
-        """Swaps two cities in the route."""
-        a = random.randint(0, len(self.state) - 1)
-        b = random.randint(0, len(self.state) - 1)
-        self.state[a], self.state[b] = self.state[b], self.state[a]
+	def move(self):
+		"""Swaps two cities in the route."""
+		a = random.randint(0, len(self.state) - 1)
+		b = random.randint(0, len(self.state) - 1)
+		self.state[a], self.state[b] = self.state[b], self.state[a]
 
-    def energy(self):
-        """Calculates the length of the route."""
-        e = 0
-        for i in range(len(self.state)):
-            e += self.distance_matrix[self.state[i-1]][self.state[i]]
-        return e
+	def energy(self):
+		"""Calculates the length of the route."""
+		e = 0
+		for i in range(0,len(self.state)):
+			e += self.distance_matrix[i-1][i]
+		return e
 
-def annealer_gen(data):
-    init_state = range(0,len(data))
-    random.shuffle(init_state)
+def annealer_gen(data_cluster , data_cluster_index):
+	"""
+	Driver function for annealer per cluster.
+	"""
+	init_state = data_cluster_index
+	random.shuffle(init_state)
 
-    # create a distance matrix
+	# create a distance matrix
 
-    distance_matrix = gen_cost(data)
-    tsp = TravellingSalesmanProblem(init_state, distance_matrix)
-    state, e = tsp.anneal()
-    print(state)
-    print(e)
+	distance_matrix = gen_cost(data_cluster)
+	tsp = TravellingSalesmanProblem(init_state, distance_matrix)
+	state, e = tsp.anneal()
+	print(state)
+	print(e)
 
 
 def gen_data(number, dimension):
@@ -103,11 +107,13 @@ def slice_data(data, cluster, no_of_clusters):
 	Output : slice_data
 	"""
 	dummy = [[] for i in range(0,no_of_clusters)]
+	dummy_index = [[] for i in range(0,no_of_clusters)]
 	j = 0
 	for i in cluster:
 		dummy[i].append(data[j])
+		dummy_index[i].append(j)
 		j +=1
-	return dummy
+	return dummy, dummy_index
 		
 
 
@@ -128,23 +134,22 @@ def main():
 	dimension = 15
 	data =  gen_data(no_data, dimension)
 	# generate the cost matrix data
-	cost_matrix = gen_cost(data)
+	distance_matrix = gen_cost(data)
 	no_of_clusters = 2		# number of clusters.
 	# call KMeans clustering
 	cluster = KMeans(n_clusters=no_of_clusters).fit_predict(data)
 	# Slice the data.
-	data_cluster = slice_data(data, cluster, no_of_clusters)
+	data_cluster, data_cluster_index = slice_data(data, cluster, no_of_clusters)
 	print (data)
-	print (cluster)
-	# print (data_cluster)
-	for i in data_cluster:
+	# print (distance_matrix)
+	# print (cluster)
+	print (data_cluster_index)
+	for i in range(0,no_of_clusters):
 		# print(i)
-		annealer_gen(i)
+		annealer_gen(data_cluster[i], data_cluster_index[i])
 
 	
 	
-
-
 
 
 if __name__ == '__main__':
