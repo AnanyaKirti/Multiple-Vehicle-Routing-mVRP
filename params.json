@@ -1,0 +1,6 @@
+{
+  "name": "Multiple-vehicle-routing-mvrp",
+  "tagline": "multiple Vehicle Routing using Cluster First, Route Second Paradigm.",
+  "body": "### mVRP Multiple Vehicle Routing Algorithm\r\nThis is an implementation of multiple Vehicle Routing using Cluster First, Route Second Paradigm.\r\n\r\n### How does it work?\r\nWe have used K-Means clustering followed by simulated annealing on each of the clusters. The technique offers a good combination of speed and accuracy. The original problem is an NP Hard problem, and hence no good direct method exists to solve the problem.\r\n\r\n#### ©Ananya Kirti",
+  "note": "Don't delete this file! It's used internally to help with page regeneration."
+}
